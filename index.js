@@ -31,16 +31,13 @@ import cors from "cors";
 import xss from "xss-clean";
 import helmet from "helmet";
 
-let originUrl =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:5173"
-    : "https://ebubedev.netlify.app";
+const corsOptions = {
+  origin: "https://ebubedev.netlify.app", // Only allow this origin
+  optionsSuccessStatus: 200, // Some older browsers (IE11, various SmartTVs) choke on 204
+};
 
-app.use(
-  cors({
-    origin: originUrl,
-  })
-);
+// Use the cors middleware
+app.use(cors(corsOptions));
 
 app.use(
   helmet({
