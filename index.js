@@ -31,14 +31,22 @@ import cors from "cors";
 import xss from "xss-clean";
 import helmet from "helmet";
 
-let originUrl =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:5173"
-    : "https://ebubedev.netlify.app";
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://ebubedev.netlify.app", // your frontend
+];
 
 app.use(
   cors({
-    origin: originUrl,
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
   })
 );
 
