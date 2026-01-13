@@ -31,30 +31,16 @@ import cors from "cors";
 import xss from "xss-clean";
 import helmet from "helmet";
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://ebubedev.netlify.app",
-];
+let originUrl =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:5173"
+    : "https://ebubedev.netlify.app";
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // allow requests from tools like Postman
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: originUrl,
   })
 );
-
-// 👇 THIS IS CRITICAL
-app.options("*", cors());
 
 app.use(
   helmet({
