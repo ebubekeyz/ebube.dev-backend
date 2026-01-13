@@ -31,17 +31,17 @@ import cors from "cors";
 import xss from "xss-clean";
 import helmet from "helmet";
 
-app.set("trust proxy", 1); // REQUIRED FOR RENDER
+let originUrl =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:5173"
+    : "https://ebubedev.netlify.app";
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: originUrl,
   })
 );
 
-app.options("*", cors());
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
