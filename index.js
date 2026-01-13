@@ -32,23 +32,29 @@ import xss from "xss-clean";
 import helmet from "helmet";
 
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://ebubedev.netlify.app", // your frontend
+  "http://localhost:5173",
+  "https://ebubedev.netlify.app",
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
+    origin: (origin, callback) => {
+      // allow requests from tools like Postman
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
-        return callback(new Error(msg), false);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
       }
-      return callback(null, true);
+
+      return callback(new Error("Not allowed by CORS"));
     },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// 👇 THIS IS CRITICAL
+app.options("*", cors());
 
 app.use(
   helmet({
