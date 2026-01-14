@@ -25,17 +25,16 @@ export const createContact = async (req, res) => {
   // let testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({
-    host: process.env.GMAIL_HOST,
-    port: process.env.GMAIL_PORT,
+    service: "gmail",
     auth: {
       user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
+      pass: process.env.GMAIL_PASS, // Gmail App Password
     },
   });
 
   let info = await transporter.sendMail({
-    from: `"${name}" <${email}>`,
-    to: `ebubeoffor2025@gmail.com`,
+    from: `"${name}" <${process.env.GMAIL_USER}>`,
+    to: `${email}`,
     subject: `${subject} from ${name}`,
     html: `<p><strong>${subject}</strong></p>
 <p>${message}</p>
