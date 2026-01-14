@@ -69,8 +69,8 @@ app.use(xss());
 
 app.use(fileUpload({ useTempFiles: true }));
 
-app.use(express.static("./public"));
 app.use(express.json());
+app.use(express.static("./public"));
 
 app.use("/api/auth", authRouter);
 
