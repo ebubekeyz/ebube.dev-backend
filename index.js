@@ -36,9 +36,17 @@ let originUrl =
     ? "http://localhost:5173"
     : "https://ebubedev.netlify.app";
 
+// app.use(
+//   cors({
+//     origin: originUrl,
+//   })
+// );
+
 app.use(
   cors({
-    origin: "*",
+    origin: "https://ebubedev.netlify.app",
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 
