@@ -31,7 +31,7 @@ export const createContact = async (req, res) => {
     // Admin email
     await transporter.sendMail({
       from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
-      to: `${email}`,
+      to: "ebubeoffor2025@gmail.com",
       subject: `${subject} from ${name}`,
       html: `
         <p><strong>${subject}</strong></p>
