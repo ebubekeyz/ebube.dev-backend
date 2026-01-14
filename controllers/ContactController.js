@@ -19,52 +19,78 @@ export const createContact = async (req, res) => {
     message,
   });
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+  // const transporter = nodemailer.createTransport({
+  //   host: "smtp.gmail.com",
+  //   port: 465,
+  //   secure: true,
+  //   auth: {
+  //     user: process.env.GMAIL_USER,
+  //     pass: process.env.GMAIL_PASS,
+  //   },
+  //   tls: {
+  //     rejectUnauthorized: false,
+  //   },
+  // });
+
+  // try {
+  //   // Admin email
+  //   await transporter.verify();
+  //   await transporter.sendMail({
+  //     from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
+  //     to: "ebubeoffor2025@gmail.com",
+  //     subject: `${subject} from ${name}`,
+  //     html: `
+  //       <p><strong>${subject}</strong></p>
+  //       <p>${message}</p>
+  //       <p>
+  //         From: ${name}<br/>
+  //         Email: ${email}<br/>
+  //         Phone: ${phone}
+  //       </p>
+  //     `,
+  //     replyTo: email,
+  //   });
+
+  //   // Auto-reply to user
+  //   await transporter.sendMail({
+  //     from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
+  //     to: email,
+  //     subject: "Message received – Weld Central",
+  //     html: `
+  //       <p><strong>Thank you for contacting Weld Central!</strong></p>
+  //       <p>We’ve received your message and will respond shortly.</p>
+  //       <p>Best regards,<br/>Weld Central Team</p>
+  //     `,
+  //   });
+  // } catch (err) {
+  //   console.error("Nodemailer failed:", err.message);
+  // }
+
+  let transporter = nodemailer.createTransport({
+    host: process.env.ZOHO_HOST, // Use smtp.zoho.eu for the EU datacenter
+    secure: true, // Use SSL
+    port: 465, // Port 465 for SSL or 587 for TLS
     auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
+      user: process.env.ZOHO_USER, // Your Zoho Mail email address
+      pass: process.env.ZOHO_PASS, // Your email password or a generated app password
     },
   });
 
-  try {
-    // Admin email
-    await transporter.verify();
-    await transporter.sendMail({
-      from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
-      to: "ebubeoffor2025@gmail.com",
-      subject: `${subject} from ${name}`,
-      html: `
-        <p><strong>${subject}</strong></p>
-        <p>${message}</p>
-        <p>
-          From: ${name}<br/>
-          Email: ${email}<br/>
-          Phone: ${phone}
-        </p>
-      `,
-      replyTo: email,
-    });
+  const mailOptions = {
+    from: process.env.ZOHO_USER, // Sender address
+    to: process.env.ZOHO_USER, // List of recipients
+    subject: subject, // Subject line
+    text: message, // Plain text body
+    // html: '<b>This is the HTML body of the email</b>' // HTML body (optional)
+  };
 
-    // Auto-reply to user
-    await transporter.sendMail({
-      from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: "Message received – Weld Central",
-      html: `
-        <p><strong>Thank you for contacting Weld Central!</strong></p>
-        <p>We’ve received your message and will respond shortly.</p>
-        <p>Best regards,<br/>Weld Central Team</p>
-      `,
-    });
-  } catch (err) {
-    console.error("Nodemailer failed:", err.message);
-  }
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
 
   res
     .status(StatusCodes.CREATED)
