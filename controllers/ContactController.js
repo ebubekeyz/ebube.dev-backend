@@ -32,9 +32,9 @@ export const createContact = async (req, res) => {
     },
   });
 
-  await transporter.verify();
   try {
     // Admin email
+    await transporter.verify();
     await transporter.sendMail({
       from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
       to: "ebubeoffor2025@gmail.com",
