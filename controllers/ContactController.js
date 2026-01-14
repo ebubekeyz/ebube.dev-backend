@@ -69,7 +69,7 @@ export const createContact = async (req, res) => {
   let transporter = nodemailer.createTransport({
     host: process.env.ZOHO_HOST, // Use smtp.zoho.eu for the EU datacenter
     secure: true, // Use SSL
-    port: 465, // Port 465 for SSL or 587 for TLS
+    port: process.env.ZOHO.PORT, // Port 465 for SSL or 587 for TLS
     auth: {
       user: process.env.ZOHO_USER, // Your Zoho Mail email address
       pass: process.env.ZOHO_PASS, // Your email password or a generated app password
