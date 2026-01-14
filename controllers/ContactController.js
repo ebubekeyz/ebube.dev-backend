@@ -11,6 +11,10 @@ export const createContact = async (req, res) => {
     throw new BadRequestError("Please provide all details");
   }
 
+  if (name == "" || email == "" || phone == "" || message == "") {
+    throw new BadRequestError("Fields Should not be empty");
+  }
+
   const contact = await Contact.create({
     subject,
     name,
@@ -18,51 +22,40 @@ export const createContact = async (req, res) => {
     phone,
     message,
   });
+  // let testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS, // App Password
+      pass: process.env.GMAIL_PASS, // Gmail App Password
     },
   });
 
-  try {
-    // Admin email
-    await transporter.sendMail({
-      from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
-      to: "ebubeoffor2025@gmail.com",
-      subject: `${subject} from ${name}`,
-      html: `
-        <p><strong>${subject}</strong></p>
-        <p>${message}</p>
-        <p>
-          From: ${name}<br/>
-          Email: ${email}<br/>
-          Phone: ${phone}
-        </p>
-      `,
-      replyTo: email,
-    });
+  let info = await transporter.sendMail({
+    from: `"${name}" <${process.env.GMAIL_USER}>`,
+    to: `ebubeoffor2025@gmail.com`,
+    subject: `${subject} from ${name}`,
+    html: `<p><strong>${subject}</strong></p>
+<p>${message}</p>
 
-    // Auto-reply to user
-    await transporter.sendMail({
-      from: `"Weld Central Support" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: "Message received – Weld Central",
-      html: `
-        <p><strong>Thank you for contacting Weld Central!</strong></p>
-        <p>We’ve received your message and will respond shortly.</p>
-        <p>Best regards,<br/>Weld Central Team</p>
-      `,
-    });
-  } catch (err) {
-    console.error("Nodemailer failed:", err.message);
-  }
+<p>From<br />${name}</p> <p>Phone:<br />${phone}</p>  `,
+  });
+
+  let info2 = await transporter.sendMail({
+    from: `"Ebube.dev" <${process.env.GMAIL_USER}>`,
+    to: `${email}`,
+    subject: `Message from Weld Central Support Team`,
+    html: ` <p><strong>Thank you for Your Submission!</strong></p>
+<p>We&rsquo;ve successfully received your form and appreciate you taking the time to provide us with your information. Our team will review your submission and get back to you as soon as possible.</p>
+<p>If you have any urgent questions or need further assistance, please don&rsquo;t hesitate to reach out to us at help.weldcentral@gmail.</p>
+<p>Thank you for choosing Weld Central. We look forward to connecting with you soon!</p>
+<p>Best regards,<br />The Weld Central Team</p>  `,
+  });
 
   res
     .status(StatusCodes.CREATED)
-    .json({ msg: "Thank you for your submission!" });
+    .json({ msg: "Thank you for Your Submission!" });
 };
 
 export const getContact = async (req, res) => {
