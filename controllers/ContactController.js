@@ -22,37 +22,37 @@ export const createContact = async (req, res) => {
     phone,
     message,
   });
-//   let testAccount = await nodemailer.createTestAccount();
+  // let testAccount = await nodemailer.createTestAccount();
 
-//   const transporter = nodemailer.createTransport({
-//     host: process.env.GMAIL_HOST,
-//     port: process.env.GMAIL_PORT,
-//     auth: {
-//       user: process.env.GMAIL_USER,
-//       pass: process.env.GMAIL_PASS,
-//     },
-//   });
+  const transporter = nodemailer.createTransport({
+    host: process.env.GMAIL_HOST,
+    port: process.env.GMAIL_PORT,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
+    },
+  });
 
-//   let info = await transporter.sendMail({
-//     from: `"${name}" <${email}>`,
-//     to: `ebubeoffor2025@gmail.com`,
-//     subject: `${subject} from ${name}`,
-//     html: `<p><strong>${subject}</strong></p>
-// <p>${message}</p>
+  let info = await transporter.sendMail({
+    from: `"${name}" <${email}>`,
+    to: `ebubeoffor2025@gmail.com`,
+    subject: `${subject} from ${name}`,
+    html: `<p><strong>${subject}</strong></p>
+<p>${message}</p>
 
-// <p>From<br />${name}</p> <p>Phone:<br />${phone}</p>  `,
-//   });
+<p>From<br />${name}</p> <p>Phone:<br />${phone}</p>  `,
+  });
 
-//   let info2 = await transporter.sendMail({
-//     from: `"Weld Central " <ebubeoffor2025@gmail.com>`,
-//     to: `${email}`,
-//     subject: `Message from Weld Central Support Team`,
-//     html: ` <p><strong>Thank you for Your Submission!</strong></p>
-// <p>We&rsquo;ve successfully received your form and appreciate you taking the time to provide us with your information. Our team will review your submission and get back to you as soon as possible.</p>
-// <p>If you have any urgent questions or need further assistance, please don&rsquo;t hesitate to reach out to us at help.weldcentral@gmail.</p>
-// <p>Thank you for choosing Weld Central. We look forward to connecting with you soon!</p>
-// <p>Best regards,<br />The Weld Central Team</p>  `,
-//   });
+  let info2 = await transporter.sendMail({
+    from: `"Weld Central " <ebubeoffor2025@gmail.com>`,
+    to: `${email}`,
+    subject: `Message from Weld Central Support Team`,
+    html: ` <p><strong>Thank you for Your Submission!</strong></p>
+<p>We&rsquo;ve successfully received your form and appreciate you taking the time to provide us with your information. Our team will review your submission and get back to you as soon as possible.</p>
+<p>If you have any urgent questions or need further assistance, please don&rsquo;t hesitate to reach out to us at help.weldcentral@gmail.</p>
+<p>Thank you for choosing Weld Central. We look forward to connecting with you soon!</p>
+<p>Best regards,<br />The Weld Central Team</p>  `,
+  });
 
   res
     .status(StatusCodes.CREATED)
