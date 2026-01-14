@@ -4,7 +4,7 @@ const require = createRequire(import.meta.url);
 import express from "express";
 const app = express();
 
-import("express-async-errors");
+import "express-async-errors";
 import connectDB from "./db/connect.js";
 require("dotenv").config();
 
@@ -36,17 +36,9 @@ let originUrl =
     ? "http://localhost:5173"
     : "https://ebubedev.netlify.app";
 
-// app.use(
-//   cors({
-//     origin: originUrl,
-//   })
-// );
-
 app.use(
   cors({
-    origin: "https://ebubedev.netlify.app",
-    methods: ["GET", "POST"],
-    credentials: true,
+    origin: originUrl,
   })
 );
 
