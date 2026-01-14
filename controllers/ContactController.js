@@ -20,13 +20,19 @@ export const createContact = async (req, res) => {
   });
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS, // App Password
+      pass: process.env.GMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
+  await transporter.verify();
   try {
     // Admin email
     await transporter.sendMail({
