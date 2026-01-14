@@ -31,14 +31,32 @@ import cors from "cors";
 import xss from "xss-clean";
 import helmet from "helmet";
 
-let originUrl =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:5173"
-    : "https://ebubedev.netlify.app";
+// let originUrl =
+//   process.env.NODE_ENV !== "production"
+//     ? "http://localhost:5173"
+//     : "https://ebubedev.netlify.app";
+
+// app.use(
+//   cors({
+//     origin: originUrl,
+//   })
+// );
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ebubedev.netlify.app",
+];
 
 app.use(
   cors({
-    origin: originUrl,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 
