@@ -79,8 +79,8 @@ export const createContact = async (req, res) => {
   const mailOptions = {
     from: process.env.ZOHO_USER, // Sender address
     to: process.env.ZOHO_USER, // List of recipients
-    subject: subject, // Subject line
-    text: message, // Plain text body
+    subject: `${subject}`, // Subject line
+    text: `${message}`, // Plain text body
     // html: '<b>This is the HTML body of the email</b>' // HTML body (optional)
   };
 
