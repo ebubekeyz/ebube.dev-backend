@@ -66,30 +66,40 @@ export const createContact = async (req, res) => {
   //   console.error("Nodemailer failed:", err.message);
   // }
 
-  let transporter = nodemailer.createTransport({
-    host: process.env.ZOHO_HOST, // Use smtp.zoho.eu for the EU datacenter
-    secure: true, // Use SSL
-    port: process.env.ZOHO_PORT, // Port 465 for SSL or 587 for TLS
+  const transporter = nodemailer.createTransport({
+    host: process.env.ZOHO_HOST,
+    port: Number(process.env.ZOHO_PORT),
+    secure: true,
     auth: {
-      user: process.env.ZOHO_USER, // Your Zoho Mail email address
-      pass: process.env.ZOHO_PASS, // Your email password or a generated app password
+      user: process.env.ZOHO_USER,
+      pass: process.env.ZOHO_PASS,
     },
   });
 
-  const mailOptions = {
-    from: process.env.ZOHO_USER, // Sender address
-    to: process.env.ZOHO_USER, // List of recipients
-    subject: `${subject}`, // Subject line
-    text: `${message}`, // Plain text body
-    // html: '<b>This is the HTML body of the email</b>' // HTML body (optional)
-  };
+  await transporter.sendMail({
+    from: `"Ebube.dev Contact" <${process.env.ZOHO_USER}>`,
+    to: "ebubeoffor2025@gmail.com", // send to a DIFFERENT inbox
+    subject: subject || "New Contact Message",
+    replyTo: email,
+    html: `
+    <h3>New Contact Message</h3>
+    <p><strong>Name:</strong> ${name}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Phone:</strong> ${phone}</p>
+    <p><strong>Message:</strong></p>
+    <p>${message}</p>
+  `,
+  });
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
+  await transporter.sendMail({
+    from: `"Ebube.dev" <${process.env.ZOHO_USER}>`,
+    to: email,
+    subject: "We received your message",
+    html: `
+    <p>Hello ${name},</p>
+    <p>Thank you for contacting us. We’ve received your message and will reply shortly.</p>
+    <p>— Ebube.dev</p>
+  `,
   });
 
   res
